@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wallpaper Engine Sync</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        body { overflow: hidden; background: #000; }
+        canvas { width: 100vw; height: 100vh; display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="exCanvas"></canvas>
+    <script>
+        var canvas = document.getElementById("exCanvas");
+        var ctx = canvas.getContext("2d");
+
+        canvas.width = 320;
+        canvas.height = 180;
+
+        var loadCount = 0;
+        var errorCount = 0;
+
+        function log(msg) {
+            console.log("[WPS] " + msg);
+        }
+
+        log("Efeito iniciado!");
+
+        function loadFrame() {
+            var img = new Image();
+            img.crossOrigin = "anonymous";
+
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                loadCount++;
+                if (loadCount === 1) {
+                    log("Primeira imagem carregada! " + img.width + "x" + img.height);
+                }
+            };
+
+            img.onerror = function() {
+                errorCount++;
+            };
+
+            img.src = "http://127.0.0.1:16040/frame.bmp?t=" + Date.now();
+        }
+
+        setInterval(loadFrame, 50);
+
+        log("Setup completo, aguardando servidor...");
+    </script>
+</body>
+</html>
